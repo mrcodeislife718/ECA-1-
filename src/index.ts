@@ -13,6 +13,8 @@ export * from "./integration/EmbodimentHandshake.js";
 export * from "./integration/FrictionlessTransitionCoordinator.js";
 export * from "./integration/AutomaticEmbodimentAdaptation.js";
 export * from "./integration/UniversalEmbodimentDescriptor.js";
+export * from "./integration/UniversalAutoIntegration.js";
+export * from "./integration/IntegrationProfileRegistry.js";
 export * from "./adaptation/index.js";
 export * from "./hardware/UniversalPhysicalRobotContract.js";
 export * from "./hardware/PhysicalRobotAdapter.js";
