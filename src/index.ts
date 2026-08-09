@@ -11,6 +11,7 @@ export * from "./governance/PhysicalAuthorization.js";
 export * from "./integration/UniversalPlatformRegistry.js";
 export * from "./integration/EmbodimentHandshake.js";
 export * from "./integration/FrictionlessTransitionCoordinator.js";
+export * from "./integration/AutomaticEmbodimentAdaptation.js";
 export * from "./memory/EvidenceMemory.js";
 export * from "./metrics/IndustrialMetrics.js";
 export * from "./uplink/GovernedUplink.js";
