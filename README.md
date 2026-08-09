@@ -186,6 +186,224 @@ The architecture is designed to produce:
 - fleet-level approved learning artifacts;
 - platform-specific validation reports.
 
+## Industrial robotics value
+
+ECA-1 is aimed directly at several of the bottlenecks industrial robotics and manufacturing automation must solve as systems move beyond rigid, pre-programmed behavior toward operation under variability in geometry, contact, friction, placement, sensor conditions, tool condition, part tolerance, and changing environments.
+
+Contact-rich operations such as insertion, assembly, polishing, routing, inspection, and manipulation are particularly sensitive to small physical deviations. ECA-1 is designed for the point where physical reality no longer matches the planned state.
+
+### 1. Failure recovery instead of failure termination
+
+Industrial systems should not treat every unexpected execution condition as the end of cognition. ECA-1 treats recovery, safe-state transition, evidence preservation, fault isolation, degraded operation, and continued reasoning as first-class architectural responsibilities rather than bolted-on exception handling.
+
+A failed operation can therefore become the beginning of a governed recovery process rather than merely an error code.
+
+### 2. Persistent body and world state
+
+Manufacturing requires more than visual perception. Force, joint position, thermal state, actuator health, proximity, sensor reliability, tool condition, payload, reachability, mission state, environmental conditions, and prior outcomes can all affect whether an operation succeeds.
+
+ECA-1's sensor fusion, body-state model, world-state model, attention and routing systems, mission state, memory, and degraded-operation architecture are designed to preserve that context continuously.
+
+### 3. Intelligence is separated from permission to move
+
+A reasoning system may propose an action without being allowed to execute it.
+
+ECA-1 separates candidate action generation from physical authorization:
+
+```text
+Candidate Action
+    -> Physical Clearance
+    -> Motion Gate
+    -> Actuator Authorization
+    -> Hardware Abstraction
+    -> Robot
+```
+
+This separation is fundamental to industrial deployment. Intelligence may evaluate, simulate, and recommend an action, but physical execution remains governed by current authority, safety envelopes, body state, environmental conditions, collision constraints, actuator limits, and mission context.
+
+### 4. Learning from physical discrepancies
+
+A useful industrial robot should do more than report `FAIL` when measured reality differs from expectation.
+
+For example, a dimensional discrepancy of only tens of micrometers may result from:
+
+- placement error;
+- temperature-induced expansion;
+- calibration drift;
+- tool wear;
+- part tolerance;
+- sensor drift;
+- abnormal force behavior;
+- fixture movement;
+- contamination or obstruction;
+- actuator or mechanical degradation.
+
+ECA-1 can treat the discrepancy as evidence, preserve competing explanations, use body and world state to evaluate them, simulate or request safe diagnostic actions, observe the result, update its understanding, and retain the physical relationship for future missions.
+
+### 5. Cross-platform cognitive architecture
+
+The robotics industry does not have one body. Industrial arms, cobots, humanoids, mobile manipulators, inspection robots, autonomous laboratories, drones, service robots, and custom machinery all expose different sensors, actuators, limits, and physical capabilities.
+
+ECA-1's hardware-abstraction boundary keeps cognition and governance independent from individual robot hardware. A new platform requires a validated platform adapter, safety envelope, capability definition, sensor calibration, and actuator constraints—not a complete redesign of the cognitive architecture.
+
+## From architecture to demonstrated industrial capability
+
+The architecture creates the potential for industrial value, but production value must be demonstrated experimentally.
+
+A representative failure-and-recovery sequence is:
+
+```text
+Normal operation
+     ↓
+Introduce unknown physical deviation
+     ↓
+Robot detects discrepancy
+     ↓
+ECA-1 identifies competing causes
+     ↓
+ECA-1 requests or executes safe diagnostic actions
+     ↓
+Cause becomes better understood
+     ↓
+Corrective action passes physical clearance
+     ↓
+Operation succeeds
+     ↓
+Experience is retained
+     ↓
+Same or related failure occurs again
+     ↓
+ECA-1 recognizes it earlier
+     ↓
+Downtime decreases
+```
+
+For an industrial deployment, the value proposition is not simply that the robot contains a biologically inspired cognitive architecture. The measurable target is:
+
+> **Less downtime + fewer interventions + fewer damaged parts + faster recovery.**
+
+## Industrial Failure & Recovery Benchmark
+
+ECA-1 should be evaluated not only on task completion, but on what happens when the environment, machine, component, or sensor state becomes different from what the system expected.
+
+The ECA-1 Industrial Failure & Recovery Benchmark is intended to measure whether the system can repeatedly:
+
+- detect an unexpected physical condition;
+- preserve the evidence that produced the discrepancy;
+- distinguish multiple plausible causes;
+- select safe, informative diagnostic actions;
+- maintain physical authorization boundaries during recovery;
+- isolate or degrade failed capabilities when necessary;
+- recover the operation without unnecessary human intervention;
+- retain the learned physical relationship;
+- recognize recurrence earlier;
+- transfer useful recovery knowledge to related failures and platforms.
+
+Representative benchmark disturbances may include:
+
+- dimensional variation;
+- calibration drift;
+- fixture displacement;
+- tool wear;
+- unexpected friction;
+- partial sensor degradation;
+- actuator degradation;
+- thermal expansion;
+- changed geometry;
+- contradictory sensors;
+- obstruction or contamination;
+- previously unseen failure modes.
+
+### Mean Time To Autonomous Recovery (MTTAR)
+
+A core industrial metric for ECA-1 is **Mean Time To Autonomous Recovery**:
+
+```text
+MTTAR = time(successful recovery) - time(first anomaly)
+```
+
+MTTAR measures how quickly the system can move from detecting an abnormal condition to restoring authorized, successful operation without unnecessary human intervention.
+
+### Autonomous Recovery Rate
+
+```text
+Autonomous Recovery Rate =
+    recoverable failures solved without human intervention
+    ------------------------------------------------------
+                    recoverable failures
+```
+
+This measures how often ECA-1 successfully restores operation when autonomous recovery is both possible and authorized.
+
+### Recurrence Prevention Rate
+
+```text
+Recurrence Prevention Rate =
+    previously learned failure classes prevented or resolved early
+    ---------------------------------------------------------------
+                         repeated failure events
+```
+
+This measures whether retained physical experience actually changes future behavior rather than merely being stored.
+
+Additional benchmark measurements should include:
+
+- anomaly-detection latency;
+- diagnosis confidence and evidence quality;
+- number of diagnostic actions required;
+- unnecessary-action count;
+- human-intervention frequency;
+- safe-state entry accuracy;
+- false recovery rate;
+- damaged-part rate;
+- repeated-failure rate;
+- transfer success across related conditions;
+- transfer success across robot platforms;
+- time from anomaly to stable causal explanation;
+- time from explanation to authorized correction.
+
+## Industrial operating thesis
+
+ECA-1 is not intended to be simply another smarter robot controller.
+
+> **ECA-1 makes robots capable of staying cognitively coherent when physical reality stops matching the plan.**
+
+The industrial goal is a robot brain that can detect divergence between expectation and reality, preserve uncertainty instead of hiding it, reason across body and world state, safely gather additional evidence, authorize only permitted physical responses, recover when possible, enter a safe state when necessary, and retain useful experience for future operation.
+
+That makes failure itself a source of structured physical intelligence:
+
+```text
+Unexpected physical state
+        ↓
+Attention escalation
+        ↓
+World/body-state discrepancy
+        ↓
+Prior episodic + procedural memory
+        ↓
+Generate competing explanations
+        ↓
+Simulate candidate responses
+        ↓
+Choose lowest-risk informative action
+        ↓
+Physical clearance
+        ↓
+Authorized experiment or action
+        ↓
+Observe consequence
+        ↓
+Update evidence
+        ↓
+Update understanding
+        ↓
+Recover operation or enter safe state
+        ↓
+Retain learned physical relationship
+```
+
+The strongest demonstration of ECA-1's industrial value will therefore not be another isolated manipulation demo. It will be repeatable evidence that the system can detect, diagnose, safely experiment, recover, retain the lesson, and transfer what it learned to related physical failures.
+
 ## Engineering significance
 
 ECA-1 demonstrates systems engineering across cognitive architecture, robotics, sensor fusion, state estimation, memory, executive control, simulation, authorization, hardware abstraction, physical safety, recovery, and human oversight.
