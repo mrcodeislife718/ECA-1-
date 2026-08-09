@@ -23,6 +23,7 @@ export * from "./recovery/AutonomousRecoveryOrchestrator.js";
 export * from "./learning/CapabilityLearning.js";
 export * from "./runtime/LatencyClasses.js";
 export * from "./runtime/HumanResponsiveLatency.js";
+export * from "./runtime/RealTimeExecutionFabric.js";
 export * from "./runtime/LocalReflexPath.js";
 export * from "./runtime/UniversalSituationRouter.js";
 export * from "./runtime/WatchdogSupervisor.js";
