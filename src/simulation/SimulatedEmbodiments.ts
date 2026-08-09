@@ -20,7 +20,8 @@ export type SimulatedFault =
 
 export type SimulatedEmbodimentConfig = {
   id: string;
-  kind: "industrial-arm" | "mobile-base" | "aerial-platform" | "humanoid-style";
+  /** Open-ended descriptive tag only. ECA-1 cognition must never branch on a closed robot taxonomy. */
+  kind: string;
   capabilities: Capability[];
   initialBody?: Record<string, unknown>;
   initialWorld?: Record<string, unknown>;
@@ -29,7 +30,7 @@ export type SimulatedEmbodimentConfig = {
 
 export class SimulatedEmbodiment implements PlatformAdapter {
   readonly id: string;
-  readonly kind: SimulatedEmbodimentConfig["kind"];
+  readonly kind: string;
   private readonly capabilitySet: Capability[];
   private body: Record<string, unknown>;
   private world: Record<string, unknown>;
@@ -123,6 +124,11 @@ export class SimulatedEmbodiment implements PlatformAdapter {
   }
 }
 
+/**
+ * Convenience samples only. They are not the supported-embodiment list and do
+ * not constrain ECA-1 universality. Universal tests should also instantiate
+ * arbitrary descriptors through UniversalEmbodimentSpace.
+ */
 export function standardSimulatedEmbodiments(): SimulatedEmbodiment[] {
   const move: Capability = { id: "move", description: "Move embodiment", maxLatencyMs: 80 };
   return [
