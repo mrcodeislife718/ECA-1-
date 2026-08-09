@@ -1,8 +1,8 @@
 {
   "name": "eca-1",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "private": true,
-  "description": "Universal governed robotics intelligence platform for heterogeneous physical embodiments.",
+  "description": "Universal governed robotics intelligence platform with portable software-first deployment across heterogeneous physical embodiments.",
   "type": "module",
   "engines": {
     "node": ">=20"
