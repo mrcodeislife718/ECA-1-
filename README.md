@@ -6,6 +6,8 @@ ECA-1 is an independent commercial cognitive architecture designed to connect pe
 
 It is not a conversational agent attached to a robot. ECA-1 is the robot brain: the software architecture responsible for understanding the body and environment, selecting authorized actions, controlling physical execution, preserving continuity, and returning the system to safety when conditions change.
 
+ECA-1 is designed for **all robotics**, not for one robotics framework, middleware stack, operating system, vendor, body type, transport, or control ecosystem. The cognitive core is platform-, protocol-, vendor-, and embodiment-agnostic. Hardware and infrastructure are attached through explicit capability, sensor, actuator, transport, and platform contracts rather than being built into cognition.
+
 ## Core principle
 
 > Biology gives ECA-1 organization. Machines give it speed, scale, memory, simulation, and robotic control.
@@ -83,7 +85,8 @@ ECA-1 Embodiment
 ├── Motion-gating engine
 ├── Actuator authorization gate
 ├── Hardware abstraction layer
-├── ROS integration bridge
+├── Universal robotics integration fabric
+├── Transport and protocol adapters
 ├── Safety-envelope monitor
 ├── Emergency-stop controller
 ├── Human override
@@ -115,9 +118,25 @@ The actuator gate binds an approved action to a specific platform, capability, c
 
 Platform adapters separate cognition from individual robot hardware so sensors and actuators can be integrated without rewriting the cognitive architecture.
 
-### ROS integration
+### Universal robotics integration fabric
 
-ROS-compatible interfaces connect ECA-1 to robot messages, sensor topics, navigation, motion systems, simulation environments, and platform services while preserving ECA-1 authority and safety gates.
+ECA-1 does not depend on a single robotics middleware or runtime. Its integration fabric exposes source-agnostic contracts for sensors, actuators, timing, transport, capabilities, mission control, telemetry, simulation, diagnostics, and safety interfaces.
+
+A deployment may connect through direct device drivers, embedded firmware, industrial fieldbuses, real-time controllers, vendor SDKs, network protocols, custom transports, vehicle systems, drone flight controllers, humanoid control stacks, laboratory automation, or future robotics interfaces. Those integrations terminate at ECA-1 adapters; they do not define the cognitive architecture.
+
+The architectural rule is one-way dependency:
+
+```text
+Robot / controller / protocol / transport
+                ↓
+       ECA-1 platform adapter
+                ↓
+     universal capability contract
+                ↓
+          ECA-1 cognition
+```
+
+The ECA-1 cognitive core must never require a particular external robotics framework in order to perceive, reason, govern, learn, recover, or act.
 
 ## Physical safety architecture
 
@@ -156,7 +175,7 @@ Recovery capabilities include:
 
 ## Deployment model
 
-ECA-1 can be adapted to multiple physical platforms while keeping the cognitive and governance core consistent.
+ECA-1 can be adapted to any validated robotic embodiment while keeping the cognitive and governance core consistent.
 
 Potential deployment categories include:
 
@@ -166,8 +185,13 @@ Potential deployment categories include:
 - inspection and maintenance systems;
 - mobility and vehicle intelligence;
 - aerial and ground drones;
+- marine and underwater robotics;
+- agricultural robotics;
+- construction and heavy-equipment robotics;
 - assistive robotics;
+- medical and rehabilitation robotics where appropriately validated;
 - hazardous-environment systems;
+- custom machines and novel embodiments;
 - simulation and embodied-intelligence evaluation.
 
 Every hardware deployment requires platform-specific actuator limits, sensor calibration, safety envelopes, integration testing, and operational validation. Software architecture does not replace the required physical-system certification and testing.
@@ -242,9 +266,9 @@ ECA-1 can treat the discrepancy as evidence, preserve competing explanations, us
 
 ### 5. Cross-platform cognitive architecture
 
-The robotics industry does not have one body. Industrial arms, cobots, humanoids, mobile manipulators, inspection robots, autonomous laboratories, drones, service robots, and custom machinery all expose different sensors, actuators, limits, and physical capabilities.
+The robotics industry does not have one body. Industrial arms, cobots, humanoids, mobile manipulators, inspection robots, autonomous laboratories, drones, service robots, vehicles, marine systems, heavy equipment, and custom machinery all expose different sensors, actuators, limits, and physical capabilities.
 
-ECA-1's hardware-abstraction boundary keeps cognition and governance independent from individual robot hardware. A new platform requires a validated platform adapter, safety envelope, capability definition, sensor calibration, and actuator constraints—not a complete redesign of the cognitive architecture.
+ECA-1's hardware-abstraction and universal integration boundaries keep cognition and governance independent from individual robot hardware and external control ecosystems. A new platform requires a validated platform adapter, safety envelope, capability definition, sensor calibration, actuator constraints, and transport bindings—not a complete redesign of the cognitive architecture.
 
 ## From architecture to demonstrated industrial capability
 
@@ -406,7 +430,7 @@ The strongest demonstration of ECA-1's industrial value will therefore not be an
 
 ## Engineering significance
 
-ECA-1 demonstrates systems engineering across cognitive architecture, robotics, sensor fusion, state estimation, memory, executive control, simulation, authorization, hardware abstraction, physical safety, recovery, and human oversight.
+ECA-1 demonstrates systems engineering across cognitive architecture, robotics, sensor fusion, state estimation, memory, executive control, simulation, authorization, hardware abstraction, physical safety, recovery, universal integration, and human oversight.
 
 The system treats intelligence and embodiment as one operating problem: cognition must understand the body it controls, and physical action must remain governed from decision through actuator response.
 
