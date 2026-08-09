@@ -34,9 +34,9 @@ export class UniversalRuntimeProofHarness {
 
   freshFacts(platformId: string, now = Date.now()): StateFact[] {
     return [
-      { key: "body", value: "known", source: platformId, confidence: 0.99, observedAt: now },
-      { key: "world", value: "known", source: platformId, confidence: 0.99, observedAt: now },
-      { key: "authority", value: "valid", source: "mission-authority", confidence: 1, observedAt: now }
+      { key: "body", value: "known", source: platformId, confidence: 0.99, timestamp: now },
+      { key: "world", value: "known", source: platformId, confidence: 0.99, timestamp: now },
+      { key: "authority", value: "valid", source: "mission-authority", confidence: 1, timestamp: now }
     ];
   }
 
