@@ -38,17 +38,32 @@ export class TimeToQualifiedWork {
     const missing = FLOW.filter((stage) => !this.events.has(stage));
     const segmentMs: Partial<Record<TQWMilestone, number>> = {};
     for (let i = 1; i < FLOW.length; i += 1) {
-      const previous = this.events.get(FLOW[i - 1]);
-      const current = this.events.get(FLOW[i]);
-      if (previous && current) segmentMs[FLOW[i]] = Math.max(0, current.timestamp - previous.timestamp);
+      const previousStage = FLOW[i - 1];
+      const currentStage = FLOW[i];
+
+      if (!previousStage || !currentStage) continue;
+
+      const previous = this.events.get(previousStage);
+      const current = this.events.get(currentStage);
+
+      if (previous && current) {
+        segmentMs[currentStage] = Math.max(
+          0,
+          current.timestamp - previous.timestamp
+        );
+      }
     }
+
     const first = this.events.get("connected");
     const last = this.events.get("useful-work-started");
+
     return {
       complete: missing.length === 0,
-      totalMs: first && last ? Math.max(0, last.timestamp - first.timestamp) : undefined,
       segmentMs,
-      missing
+      missing,
+      ...(first && last
+        ? { totalMs: Math.max(0, last.timestamp - first.timestamp) }
+        : {})
     };
   }
 }

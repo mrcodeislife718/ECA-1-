@@ -24,14 +24,20 @@ export class LatencyProfiler {
     const value = await operation();
     const endedAt = performance.now();
     const durationMs = endedAt - startedAt;
-    this.samplesValue.push({
+    const sample: LatencySample = {
       label,
       startedAt,
       endedAt,
       durationMs,
-      deadlineMs,
-      metDeadline: deadlineMs === undefined ? undefined : durationMs <= deadlineMs
-    });
+      ...(deadlineMs !== undefined
+        ? {
+            deadlineMs,
+            metDeadline: durationMs <= deadlineMs
+          }
+        : {})
+    };
+
+    this.samplesValue.push(sample);
     return value;
   }
 

@@ -20,8 +20,14 @@ export class StateTrustGuard {
     for (const [key, list] of byKey) {
       const live = list.filter((fact) => now - fact.timestamp <= options.maxAgeMs && fact.confidence >= options.minConfidence);
       if (live.length > 1) {
-        const first = JSON.stringify(live[0].value);
-        if (live.some((fact) => JSON.stringify(fact.value) !== first)) contradictoryKeys.add(key);
+        const firstFact = live[0];
+        if (!firstFact) continue;
+
+        const first = JSON.stringify(firstFact.value);
+
+        if (live.some((fact) => JSON.stringify(fact.value) !== first)) {
+          contradictoryKeys.add(key);
+        }
       }
     }
 

@@ -24,7 +24,9 @@ export class UniversalEmbodimentSpace {
         descriptor: testCase.descriptor,
         ...(testCase.initialBody ?? {})
       },
-      initialWorld: testCase.initialWorld
+      ...(testCase.initialWorld !== undefined
+        ? { initialWorld: testCase.initialWorld }
+        : {})
     });
   }
 

@@ -104,7 +104,9 @@ test("closed-loop recovery applies the 8-node framework to an obstruction", asyn
   assert.equal(result.plan?.selected?.id, "remeasure-temperature");
   assert.equal(result.obstruction?.blockingNodes.length, 8);
   assert.ok(result.obstruction?.recommendedChecks.includes("verify-required-capability"));
-  assert.ok(orchestrator.hypotheses.ranked()[0]?.confidence > 0.5);
+  const topHypothesis = orchestrator.hypotheses.ranked()[0];
+  assert.ok(topHypothesis);
+  assert.ok(topHypothesis.confidence > 0.5);
 });
 
 test("critical obstruction goes directly to safe state", async () => {

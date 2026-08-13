@@ -47,15 +47,19 @@ export class FrictionlessTransitionCoordinator {
     }
 
     return {
-      fromPlatformId,
+      ...(fromPlatformId !== undefined ? { fromPlatformId } : {}),
       toPlatformId: input.to.id,
       profile: toProfile,
       sharedCapabilities,
       preservedContext: {
-        missionId: input.context.missionId,
         mission: { ...input.context.mission },
         world: { ...input.context.world },
-        operatorAuthority: input.context.operatorAuthority
+        ...(input.context.missionId !== undefined
+          ? { missionId: input.context.missionId }
+          : {}),
+        ...(input.context.operatorAuthority !== undefined
+          ? { operatorAuthority: input.context.operatorAuthority }
+          : {})
       },
       ready: blockers.length === 0,
       blockers: [...new Set(blockers)]

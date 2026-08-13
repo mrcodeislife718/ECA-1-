@@ -50,10 +50,12 @@ export class DiagnosticPlanner {
       return bScore - aScore;
     });
 
+    const selected = viable[0];
+
     return {
       discrepancyId: discrepancy.id,
-      selected: viable[0],
-      rejected
+      rejected,
+      ...(selected ? { selected } : {})
     };
   }
 }
