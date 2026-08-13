@@ -63,15 +63,19 @@ export class UniversalAutoIntegration {
     ]);
 
     const adapter = await new PhysicalRobotAdapter(driver).initialize();
-    const interfaces = descriptor.endpoints.map((endpoint) => ({
+    const interfaces: DiscoveredInterface[] = descriptor.endpoints.map((endpoint) => ({
       id: endpoint.id,
       role: endpoint.role,
       transport: endpoint.transport,
-      protocol: endpoint.protocol,
       local: endpoint.local,
-      deterministic: endpoint.deterministic,
       confidence: 1,
-      evidence: ["physical-descriptor"]
+      evidence: ["physical-descriptor"],
+      ...(endpoint.protocol !== undefined
+        ? { protocol: endpoint.protocol }
+        : {}),
+      ...(endpoint.deterministic !== undefined
+        ? { deterministic: endpoint.deterministic }
+        : {})
     }));
 
     const capabilities = this.inferCapabilities(declared, observations, state);

@@ -19,10 +19,14 @@ export class TransportHealthMonitor {
     return {
       endpointId: endpoint.id,
       healthy: reasons.length === 0,
-      latencyMs: observedLatencyMs,
       local: endpoint.local,
-      deterministic: endpoint.deterministic,
-      reasons
+      reasons,
+      ...(observedLatencyMs !== undefined
+        ? { latencyMs: observedLatencyMs }
+        : {}),
+      ...(endpoint.deterministic !== undefined
+        ? { deterministic: endpoint.deterministic }
+        : {})
     };
   }
 

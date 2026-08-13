@@ -42,8 +42,12 @@ export class UniversalDriverSDK {
       readState: implementation.readState,
       writeAction: implementation.writeAction,
       emergencyStop: implementation.emergencyStop,
-      heartbeat: implementation.heartbeat,
-      close: implementation.close
+      ...(implementation.heartbeat
+        ? { heartbeat: implementation.heartbeat }
+        : {}),
+      ...(implementation.close
+        ? { close: implementation.close }
+        : {})
     };
   }
 

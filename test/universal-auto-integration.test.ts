@@ -32,8 +32,10 @@ test("connect robot discovers interfaces and leaves inferred capability unqualif
   assert.equal(report.robotId, "physical-robot-1");
   assert.equal(report.interfaces.length, 3);
   assert.equal(report.safetySurfaces[0], "safety-main");
-  assert.equal(report.capabilities[0].id, "move");
-  assert.equal(report.capabilities[0].qualified, false);
+  const capability = report.capabilities[0];
+  assert.ok(capability);
+  assert.equal(capability.id, "move");
+  assert.equal(capability.qualified, false);
   assert.equal(report.status, "needs-calibration");
 });
 

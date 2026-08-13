@@ -51,16 +51,51 @@ export class BrainDeploymentTarget {
   ): DeploymentDecision[] {
     return preferred.map((mode) => {
       const reasons: string[] = [];
-      if ((compute.memoryMb ?? 0) < requirements.minimumMemoryMb) reasons.push("insufficient-memory");
-      if ((compute.persistentStorageMb ?? 0) < requirements.minimumStorageMb) reasons.push("insufficient-storage");
-      if (requirements.requiresAccelerator && !compute.accelerator) reasons.push("accelerator-required");
-      if (requirements.requiresLocalSafetyPath && mode === "site-runtime" && !compute.realTimeControllerAvailable) {
+
+      const usesOnboardCompute =
+        mode === "downloaded-onboard" ||
+        mode === "preinstalled-oem";
+
+      const usesLocalRobotSafetyPath =
+        mode === "downloaded-onboard" ||
+        mode === "preinstalled-oem" ||
+        mode === "external-edge-runtime" ||
+        mode === "hybrid-local-site";
+
+      if (usesOnboardCompute) {
+        if ((compute.memoryMb ?? 0) < requirements.minimumMemoryMb) {
+          reasons.push("insufficient-memory");
+        }
+
+        if ((compute.persistentStorageMb ?? 0) < requirements.minimumStorageMb) {
+          reasons.push("insufficient-storage");
+        }
+
+        if (requirements.requiresAccelerator && !compute.accelerator) {
+          reasons.push("accelerator-required");
+        }
+      }
+
+      if (
+        requirements.requiresLocalSafetyPath &&
+        !usesLocalRobotSafetyPath &&
+        !compute.realTimeControllerAvailable
+      ) {
         reasons.push("local-safety-path-required");
       }
-      if (requirements.maxCriticalPathRoundTripMs <= 20 && mode === "site-runtime") {
+
+      if (
+        requirements.maxCriticalPathRoundTripMs <= 20 &&
+        mode === "site-runtime"
+      ) {
         reasons.push("critical-path-too-remote");
       }
-      return { mode, eligible: reasons.length === 0, reasons };
+
+      return {
+        mode,
+        eligible: reasons.length === 0,
+        reasons
+      };
     });
   }
 

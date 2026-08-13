@@ -37,7 +37,11 @@ export class DeploymentLifecycle {
   private readonly evidence: DeploymentEvidence[] = [];
 
   record(item: DeploymentEvidence): void {
-    this.evidence.push({ ...item, metrics: item.metrics ? { ...item.metrics } : undefined, notes: item.notes ? [...item.notes] : undefined });
+    this.evidence.push({
+      ...item,
+      ...(item.metrics ? { metrics: { ...item.metrics } } : {}),
+      ...(item.notes ? { notes: [...item.notes] } : {})
+    });
   }
 
   highestProvenStage(): DeploymentStage | undefined {
@@ -62,6 +66,10 @@ export class DeploymentLifecycle {
   }
 
   history(): DeploymentEvidence[] {
-    return this.evidence.map((item) => ({ ...item, metrics: item.metrics ? { ...item.metrics } : undefined, notes: item.notes ? [...item.notes] : undefined }));
+    return this.evidence.map((item) => ({
+      ...item,
+      ...(item.metrics ? { metrics: { ...item.metrics } } : {}),
+      ...(item.notes ? { notes: [...item.notes] } : {})
+    }));
   }
 }

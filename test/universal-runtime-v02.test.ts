@@ -47,7 +47,20 @@ test("stale or contradictory state blocks transition commit and permits rollback
   const target = { ...source, platformId: "drone" };
   runtime.prepareTransition(source, target);
 
-  const readiness = await runtime.assess(robot, [{ key: "world.clear", value: true, timestamp: now - 1000, confidence: 1, source: "old" }], now);
+  const readiness = await runtime.assess(
+    robot,
+    [{ capability: "move", required: true }],
+    [
+      {
+        key: "world.clear",
+        value: true,
+        timestamp: now - 1000,
+        confidence: 1,
+        source: "old"
+      }
+    ],
+    now
+  );
   assert.equal(readiness.ready, false);
   assert.throws(() => runtime.commitTransition(readiness));
   assert.equal(runtime.rollbackTransition().platformId, "arm");

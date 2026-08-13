@@ -67,21 +67,32 @@ export class AutonomousRecoveryOrchestrator {
 
     if (discrepancy.hazard === "critical") {
       this.stateMachine.transition("safe-state");
-      return { state: this.stateMachine.state(), obstruction };
+      return {
+        state: this.stateMachine.state(),
+        ...(obstruction ? { obstruction } : {})
+      };
     }
 
     this.stateMachine.transition("propose");
     const plan = this.planner.select(discrepancy, this.hypotheses.ranked(), candidates, limits);
     if (!plan.selected) {
       this.stateMachine.transition("diagnose");
-      return { plan, state: this.stateMachine.state(), obstruction };
+      return {
+        plan,
+        state: this.stateMachine.state(),
+        ...(obstruction ? { obstruction } : {})
+      };
     }
 
     const budgetDecision = this.budget.canAttempt(plan.selected.estimatedRisk, plan.selected.estimatedCost);
     if (!budgetDecision.allowed) {
       this.stateMachine.transition("authorize");
       this.stateMachine.transition("safe-state");
-      return { plan, state: this.stateMachine.state(), obstruction };
+      return {
+        plan,
+        state: this.stateMachine.state(),
+        ...(obstruction ? { obstruction } : {})
+      };
     }
 
     this.stateMachine.transition("authorize");
@@ -111,7 +122,7 @@ export class AutonomousRecoveryOrchestrator {
       action: plan.selected.action,
       observation,
       state: this.stateMachine.state(),
-      obstruction
+      ...(obstruction ? { obstruction } : {})
     };
   }
 }

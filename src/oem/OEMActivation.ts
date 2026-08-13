@@ -30,9 +30,15 @@ export class OEMActivation {
       scopeId: unitId,
       features: ["brain-runtime", "field-update", "qualification", "recovery"],
       validFrom,
-      validUntil,
       status: "active",
-      metadata: { manufacturer: unit.manufacturer, model: unit.model, firmware: unit.firmware }
+      ...(validUntil !== undefined ? { validUntil } : {}),
+      metadata: {
+        manufacturer: unit.manufacturer,
+        model: unit.model,
+        ...(unit.firmware !== undefined
+          ? { firmware: unit.firmware }
+          : {})
+      }
     });
   }
 
