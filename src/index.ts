@@ -26,6 +26,7 @@ export * from "./hardware/TransportHealthMonitor.js";
 export * from "./hardware/UniversalDriverSDK.js";
 export * from "./hardware/DriverQualification.js";
 export * from "./hardware/DriverOnboardingPipeline.js";
+export * from "./hardware/ActuationCommandGateway.js";
 export * from "./commercial/ProductCatalog.js";
 export * from "./commercial/LicensingEngine.js";
 export * from "./commercial/EconomicsModel.js";
