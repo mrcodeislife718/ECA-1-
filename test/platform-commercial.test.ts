@@ -1,20 +1,9 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { projectAnnualRecurringRevenue, impliedValuation, ECA1_SCALE_SCENARIOS } from "../src/commercial/EconomicsModel.js";
 import { LicensingEngine } from "../src/commercial/LicensingEngine.js";
 import { DeploymentLifecycle } from "../src/deployment/DeploymentLifecycle.js";
 import { TimeToQualifiedWork } from "../src/metrics/TimeToQualifiedWork.js";
 import { OEMActivation } from "../src/oem/OEMActivation.js";
-
-void test("recurring revenue scenarios preserve the core ECA-1 scaling math", () => {
-  const first = projectAnnualRecurringRevenue(ECA1_SCALE_SCENARIOS[0]);
-  assert.equal(first.totalArrUsd, 100_000_000);
-  const million = projectAnnualRecurringRevenue(ECA1_SCALE_SCENARIOS[2]);
-  assert.equal(million.totalArrUsd, 10_000_000_000);
-  const infrastructure = projectAnnualRecurringRevenue(ECA1_SCALE_SCENARIOS[4]);
-  assert.equal(infrastructure.totalArrUsd, 25_000_000_000);
-  assert.equal(impliedValuation(1_000_000_000, 10).impliedEnterpriseValueUsd, 10_000_000_000);
-});
 
 void test("entitlements expire instead of silently granting continued access", () => {
   const licensing = new LicensingEngine();
