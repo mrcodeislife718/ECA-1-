@@ -8,10 +8,14 @@ test('tracks uncertainty and reconciles action-conditioned predictions', () => {
   world.observe({ key: 'door.state', value: 'open', source: 'weak-sensor', confidence: 0.3, observedAt: 2 });
   assert.equal(world.belief('door.state')?.value, 'closed');
 
-  const predicted = world.predict({ type: 'open-door' }, (state) => ({
-    ...state,
-    'door.state': { ...state['door.state'], value: 'open' },
-  }));
+  const predicted = world.predict({ type: 'open-door' }, (state) => {
+    const current = state['door.state'];
+    if (!current) throw new Error('door.state belief is required');
+    return {
+      ...state,
+      'door.state': { ...current, value: 'open' },
+    };
+  });
   world.observe({ key: 'door.state', value: 'open', source: 'camera', confidence: 1, observedAt: 3 });
   assert.equal(world.reconcile(predicted, ['door.state']).matched, true);
 });
