@@ -5,6 +5,7 @@ export type DeviceIdentity = {
   publicKeyPem: string;
   keyId: string;
   enrolledAt: number;
+  rotatedAt?: number;
   revokedAt?: number;
 };
 
@@ -13,6 +14,15 @@ export type DeviceChallenge = {
   nonce: string;
   issuedAt: number;
   expiresAt: number;
+};
+
+export type DeviceKeyRotationRequest = {
+  deviceId: string;
+  currentKeyId: string;
+  newKeyId: string;
+  newPublicKeyPem: string;
+  issuedAt: number;
+  signature: Uint8Array;
 };
 
 export class DeviceIdentityRegistry {
@@ -26,10 +36,36 @@ export class DeviceIdentityRegistry {
     this.devices.set(identity.deviceId, { ...identity });
   }
 
+  rotateKey(request: DeviceKeyRotationRequest, maxAgeMs = 60_000, now = Date.now()): DeviceIdentity {
+    const current = this.devices.get(request.deviceId);
+    if (!current) throw new Error(`Unknown device: ${request.deviceId}`);
+    if (current.revokedAt !== undefined) throw new Error(`Device revoked: ${request.deviceId}`);
+    if (request.currentKeyId !== current.keyId) throw new Error("device-key-rotation-current-key-mismatch");
+    if (!request.newKeyId.trim() || !request.newPublicKeyPem.trim()) throw new Error("new device key fields are required");
+    if (request.newKeyId === current.keyId) throw new Error("device-key-rotation-key-id-not-advanced");
+    if (!Number.isFinite(request.issuedAt) || request.issuedAt > now || now - request.issuedAt > maxAgeMs) {
+      throw new Error("device-key-rotation-request-expired");
+    }
+    const payload = Buffer.from(
+      `rotate:${request.deviceId}:${request.currentKeyId}:${request.newKeyId}:${request.issuedAt}:${request.newPublicKeyPem}`,
+      "utf8"
+    );
+    if (!verify(null, payload, current.publicKeyPem, request.signature)) throw new Error("device-key-rotation-proof-invalid");
+    const rotated = { ...current, keyId: request.newKeyId, publicKeyPem: request.newPublicKeyPem, rotatedAt: now };
+    this.devices.set(request.deviceId, rotated);
+    for (const [nonce, challenge] of this.challenges) {
+      if (challenge.deviceId === request.deviceId) this.challenges.delete(nonce);
+    }
+    return { ...rotated };
+  }
+
   revoke(deviceId: string, revokedAt = Date.now()): void {
     const current = this.devices.get(deviceId);
     if (!current) throw new Error(`Unknown device: ${deviceId}`);
     this.devices.set(deviceId, { ...current, revokedAt });
+    for (const [nonce, challenge] of this.challenges) {
+      if (challenge.deviceId === deviceId) this.challenges.delete(nonce);
+    }
   }
 
   challenge(deviceId: string, ttlMs = 30_000, now = Date.now()): DeviceChallenge {
