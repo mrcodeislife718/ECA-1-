@@ -29,7 +29,9 @@ export class WorldStateModel {
     const values = this.observations.get(key) ?? [];
     if (values.length === 0) return null;
     const ranked = [...values].sort((a, b) => b.confidence - a.confidence || b.observedAt - a.observedAt || a.source.localeCompare(b.source));
-    const [selected, ...alternatives] = ranked;
+    const selected = ranked[0];
+    if (!selected) return null;
+    const alternatives = ranked.slice(1);
     return {
       value: structuredClone(selected.value) as T,
       confidence: selected.confidence,
